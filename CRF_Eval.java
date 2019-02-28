@@ -159,13 +159,6 @@ public class CRF_Eval {
             else yans[ypos--] = "_";
         }
 
-        // Since we have assumed the
-        // answer to be n+m long,
-        // we need to remove the extra
-        // gaps in the starting id
-        // represents the index from
-        // which the arrays xans,
-        // yans are useful
         int id = 1;
         for (i = l; i >= 1; i--)
         {
@@ -177,21 +170,9 @@ public class CRF_Eval {
             }
         }
 
-        // Printing the final answer
         System.out.print("Minimum Penalty in aligning the genes = ");
         System.out.print(dp[m][n] + "\n");
-        // System.out.println("The aligned genes are :");
-        /*
-        for (i = id; i <= l; i++)
-        {
-            System.out.print(xans[i]+";");
-        }
-        System.out.print("\n");
-        for (i = id; i <= l; i++)
-        {
-            System.out.print(yans[i]+";");
-        }
-        */
+
         int correctlyClassified = 0;
         for (i = id; i <= l; i++) {
             if (xans[i].equals(yans[i])) {
@@ -201,7 +182,6 @@ public class CRF_Eval {
         double precision = correctlyClassified*1.0/y.size();
         double recall = correctlyClassified*1.0/x.size();
         System.out.println("Precision: " + precision + "\nRecall: " + recall + "\nSupport: " + x.size());
-        return;
     }
 
     public static void main(String[] args) {
