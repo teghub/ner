@@ -7,8 +7,8 @@ public class CRF_Eval {
     public static void coNllF1Score(String inputPath) {
         BufferedReader br = null;
 
-        List<String> correctPersonList = new ArrayList<>();
-        List<String> predictedPersonList = new ArrayList<>();
+        List<String> correctAnnotationList = new ArrayList<>();
+        List<String> predictedAnnotationList = new ArrayList<>();
 
         String[] annotationArray = {"PERSON", "ORGANIZATION", "LOCATION", "DATE", "MONEY", "PERCENT", "TIME"};
 
@@ -16,36 +16,37 @@ public class CRF_Eval {
             try {
                 br = new BufferedReader(new InputStreamReader(new FileInputStream(inputPath), StandardCharsets.UTF_8));
                 String line = br.readLine();
-                StringBuilder correctPerson = new StringBuilder();
-                StringBuilder predictedPerson = new StringBuilder();
+                StringBuilder correctAnnotation = new StringBuilder();
+                StringBuilder predictedAnnotation = new StringBuilder();
 
+                //String annotation = "TIME".toUpperCase();
                 String annotation = annotationArray[i];
                 System.out.println(annotation);
 
                 while (line != null) {
                     if (!line.isEmpty()) {
-                        String[] terms = line.split("\t"); // token - prediction - correct annotation
+                        String[] terms = line.split("\t"); // token - prediction - annotation
 
                         if (terms[2].equals(annotation)) {
-                            correctPerson.append(" " + terms[0]);
-                        } else if (correctPerson.length() > 0) {
-                            correctPersonList.add(correctPerson.toString().substring(1, correctPerson.length()));
-                            correctPerson.delete(0, correctPerson.length());
+                            correctAnnotation.append(" " + terms[0]);
+                        } else if (correctAnnotation.length() > 0) {
+                            correctAnnotationList.add(correctAnnotation.toString().substring(1, correctAnnotation.length()));
+                            correctAnnotation.delete(0, correctAnnotation.length());
                         }
                         if (terms[1].equals(annotation)) {
-                            predictedPerson.append(" " + terms[0]);
-                        } else if (predictedPerson.length() > 0) {
-                            predictedPersonList.add(predictedPerson.toString().substring(1, predictedPerson.length()));
-                            predictedPerson.delete(0, predictedPerson.length());
+                            predictedAnnotation.append(" " + terms[0]);
+                        } else if (predictedAnnotation.length() > 0) {
+                            predictedAnnotationList.add(predictedAnnotation.toString().substring(1, predictedAnnotation.length()));
+                            predictedAnnotation.delete(0, predictedAnnotation.length());
                         }
                     } else {
-                        if (correctPerson.length() > 0) {
-                            correctPersonList.add(correctPerson.toString().substring(1, correctPerson.length()));
-                            correctPerson.delete(0, correctPerson.length());
+                        if (correctAnnotation.length() > 0) {
+                            correctAnnotationList.add(correctAnnotation.toString().substring(1, correctAnnotation.length()));
+                            correctAnnotation.delete(0, correctAnnotation.length());
                         }
-                        if (predictedPerson.length() > 0) {
-                            predictedPersonList.add(predictedPerson.toString().substring(1, predictedPerson.length()));
-                            predictedPerson.delete(0, predictedPerson.length());
+                        if (predictedAnnotation.length() > 0) {
+                            predictedAnnotationList.add(predictedAnnotation.toString().substring(1, predictedAnnotation.length()));
+                            predictedAnnotation.delete(0, predictedAnnotation.length());
                         }
                     }
 
@@ -53,9 +54,9 @@ public class CRF_Eval {
                     line = br.readLine();
                 }
 
-                getMinimumPenalty(correctPersonList, predictedPersonList, 3, 2);
-		correctPersonList.clear();
-		predictedPersonList.clear();
+                getMinimumPenalty(correctAnnotationList, predictedAnnotationList, 3, 2);
+                correctAnnotationList.clear();
+                predictedAnnotationList.clear();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -161,6 +162,13 @@ public class CRF_Eval {
             else yans[ypos--] = "_";
         }
 
+        // Since we have assumed the
+        // answer to be n+m long,
+        // we need to remove the extra
+        // gaps in the starting id
+        // represents the index from
+        // which the arrays xans,
+        // yans are useful
         int id = 1;
         for (i = l; i >= 1; i--)
         {
@@ -172,9 +180,7 @@ public class CRF_Eval {
             }
         }
 
-        System.out.print("Minimum Penalty in aligning the genes = ");
-        System.out.print(dp[m][n] + "\n");
-
+        // Printing the final answer
         int correctlyClassified = 0;
         for (i = id; i <= l; i++) {
             if (xans[i].equals(yans[i])) {
@@ -184,10 +190,10 @@ public class CRF_Eval {
         double precision = correctlyClassified*1.0/y.size();
         double recall = correctlyClassified*1.0/x.size();
         System.out.println("Precision: " + precision + "\nRecall: " + recall + "\nSupport: " + x.size());
+        return;
     }
 
     public static void main(String[] args) {
-		
-        coNllF1Score("1.fold.txt");
+         coNllF1Score("predictions.txt");
     }
 }
