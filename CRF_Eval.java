@@ -54,6 +54,8 @@ public class CRF_Eval {
                 }
 
                 getMinimumPenalty(correctPersonList, predictedPersonList, 3, 2);
+		correctPersonList.clear();
+		predictedPersonList.clear();
 
             } catch (IOException e) {
                 e.printStackTrace();
