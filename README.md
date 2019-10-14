@@ -21,7 +21,7 @@ Sample input format (tab seperated) is described below: <br />
 | yer	        | Noun	        | O           |
 | alacak	    | Verb	        | O           |
 
-You can also use the trained model ("crf_v2.joblib") to label your test dataset. The output of the model consists of "word - predicted annotation - pos" tuple where each item is seperated with tab.
+You can also use the trained model ("crf_v2.joblib") to label your test dataset. The output of the model consists of "word - predicted annotation - pos" triple where each item is seperated with tab.
 
 Sample output of the model is given below: <br />
 
